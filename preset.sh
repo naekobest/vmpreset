@@ -8,7 +8,7 @@ apt install -y zfsutils-linux
 mkdir -p /mnt/pve/UNAS-{Docker,Data,Media,Photos}
 
 for name in Docker Data Media Photos; do
-  entry="10.10.1.3:/var/nfs/shared/$(echo $name | tr '[:upper:]' '[:lower:]') /mnt/UNAS-$name nfs defaults 0 0"
+  entry="10.10.1.3:/var/nfs/shared/$(echo $name | tr '[:upper:]' '[:lower:]') /mnt/pve/UNAS-$name nfs defaults 0 0"
   if ! grep -q "$entry" /etc/fstab; then
     echo "$entry" >> /etc/fstab
   fi
