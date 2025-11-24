@@ -5,7 +5,7 @@ apt-get update
 apt-get install -y qemu-guest-agent
 
 # ZFS Pakete installieren (Debian/Ubuntu Beispiel)
-apt-get install -y zfsutils-linux
+apt-get install -y nfs-common
 
 # Ordner erstellen mit Groß-/Kleinschreibung
 mkdir -p /mnt/pve/UNAS-{Docker,Data,Media,Photos}
