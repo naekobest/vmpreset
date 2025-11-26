@@ -1,7 +1,7 @@
 # curl -o setup.sh https://raw.githubusercontent.com/naekobest/vmpreset/refs/heads/master/preset.sh
 # chmod +x setup.sh
 # sudo ./setup.sh
-#!/bin/bash
+!/bin/bash
 
 set -e
 
