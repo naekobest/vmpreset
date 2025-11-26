@@ -1,4 +1,4 @@
-# curl -o setup.sh https://raw.githubusercontent.com/username/repository/main/setup.sh
+# curl -o setup.sh https://raw.githubusercontent.com/naekobest/vmpreset/refs/heads/master/preset.sh
 # chmod +x setup.sh
 # sudo ./setup.sh
 #!/bin/bash
