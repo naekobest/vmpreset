@@ -114,11 +114,11 @@ done
 cred_file="/home/$current_user/.smbcredentials"
 if [ ! -f "$cred_file" ]; then
   echo "Erstelle Datei $cred_file mit Zugangsdaten..."
-  cat <<EOF > "$cred_file"
+  sudo -u "$current_user" bash -c "cat > $cred_file" <<EOF
 username=proxmox
 password=J275gTkpTMyD
 EOF
-  chmod 600 "$cred_file"
+  sudo chmod 600 "$cred_file"
   echo "Datei $cred_file erstellt und Berechtigungen gesetzt."
 else
   echo "Datei $cred_file existiert bereits."
