@@ -225,7 +225,7 @@ services:
       ## Default: /etc/komodo.
       - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
     ## If periphery is being run remote from the core server, ports need to be exposed
-    # ports:
+    ports:
       - 8120:8120
     ## If you want to use a custom periphery config file, use command to pass it to periphery.
     # command: periphery --config-path ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}/periphery.config.toml
