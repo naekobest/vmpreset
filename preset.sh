@@ -4,8 +4,6 @@ set -e
 
 echo "Starte Ubuntu Server Setup..."
 
-# 1. Update & Upgrade
-echo "Starte Update und Upgrade..."
 if sudo apt update && sudo apt upgrade -y; then
   echo "Update & Upgrade erfolgreich abgeschlossen."
 else
@@ -13,7 +11,6 @@ else
   exit 1
 fi
 
-# 2. Hostname setzen mit Validierung
 while true; do
   read -p "Bitte neuen Hostnamen eingeben (nur Buchstaben, Zahlen, Bindestriche): " hostname
   if [[ "$hostname" =~ ^[a-zA-Z0-9-]+$ ]]; then
@@ -36,8 +33,12 @@ if ! grep -q "127.0.1.1 $hostname" /etc/hosts; then
   echo "127.0.1.1 $hostname" | sudo tee -a /etc/hosts > /dev/null
 fi
 
-# 3. Aktuellen User sudo Rechte geben
-current_user=$(whoami)
+if [ "$SUDO_USER" ]; then
+  current_user=$SUDO_USER
+else
+  current_user=$(whoami)
+fi
+
 echo "Füge User $current_user zur sudo-Gruppe hinzu..."
 if sudo usermod -aG sudo "$current_user"; then
   echo "User $current_user hat jetzt sudo Rechte."
@@ -46,7 +47,6 @@ else
   exit 1
 fi
 
-# 4. qemu-guest-agent installieren
 echo "Installiere qemu-guest-agent..."
 if sudo apt install -y qemu-guest-agent; then
   sudo systemctl enable qemu-guest-agent
@@ -57,7 +57,6 @@ else
   exit 1
 fi
 
-# 5. Docker & Docker Compose installieren
 echo "Installiere Docker und Docker Compose..."
 
 if ! command -v docker >/dev/null 2>&1; then
@@ -74,7 +73,6 @@ else
   echo "Docker ist bereits installiert."
 fi
 
-# Docker Compose Installation
 DOCKER_COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -Po '"tag_name": "\K.*?(?=")')
 echo "Installiere Docker Compose Version $DOCKER_COMPOSE_VERSION..."
 if sudo curl -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose; then
@@ -85,7 +83,6 @@ else
   exit 1
 fi
 
-# User zu Docker Gruppe zufügen
 echo "Füge User $current_user zur Docker-Gruppe hinzu..."
 if sudo usermod -aG docker "$current_user"; then
   echo "User $current_user ist jetzt Mitglied der Docker-Gruppe."
@@ -94,7 +91,6 @@ else
   exit 1
 fi
 
-# 6. CIFS-Utilities installieren
 echo "Installiere cifs-utils..."
 if sudo apt install -y cifs-utils; then
   echo "cifs-utils installiert."
@@ -103,7 +99,6 @@ else
   exit 1
 fi
 
-# 7. Verzeichnisse erstellen
 echo "Erstelle Verzeichnisse unter /mnt/pve..."
 for dir in docker data media photos; do
   target="/mnt/pve/$dir"
@@ -116,7 +111,6 @@ for dir in docker data media photos; do
   fi
 done
 
-# 8. .smbcredentials Datei anlegen
 cred_file="/home/$current_user/.smbcredentials"
 if [ ! -f "$cred_file" ]; then
   echo "Erstelle Datei $cred_file mit Zugangsdaten..."
@@ -130,7 +124,6 @@ else
   echo "Datei $cred_file existiert bereits."
 fi
 
-# 9. fstab Einträge prüfen und ggf. hinzufügen
 echo "Füge CIFS-Mounts zur /etc/fstab hinzu..."
 
 fstab_lines=(
@@ -141,7 +134,6 @@ fstab_lines=(
 )
 
 for line in "${fstab_lines[@]}"; do
-  # Prüfen, ob der Eintrag schon existiert
   if ! grep -Fxq "$line" /etc/fstab; then
     echo "$line" | sudo tee -a /etc/fstab > /dev/null
     echo "Eintrag für Mount hinzugefügt: $line"
@@ -150,7 +142,6 @@ for line in "${fstab_lines[@]}"; do
   fi
 done
 
-# 10. Mount aller Einträge ausführen
 echo "Mounten aller Einträge..."
 if sudo mount -a; then
   echo "Mount erfolgreich."
@@ -159,7 +150,6 @@ else
   exit 1
 fi
 
-# Versionen ausgeben zur Kontrolle
 echo "Docker Version:"
 docker --version
 echo "Docker Compose Version:"
