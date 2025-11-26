@@ -1,3 +1,6 @@
+# curl -o setup.sh https://raw.githubusercontent.com/username/repository/main/setup.sh
+# chmod +x setup.sh
+# sudo ./setup.sh
 #!/bin/bash
 
 set -e
