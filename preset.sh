@@ -150,6 +150,8 @@ else
   exit 1
 fi
 
+sudo systemctl daemon-reload
+
 echo "Docker Version:"
 docker --version
 echo "Docker Compose Version:"
