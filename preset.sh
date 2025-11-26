@@ -185,20 +185,13 @@ sudo chown "$current_user":"$current_user" "$compose_dir"
 compose_file="$compose_dir/docker-compose.yaml"
 
 cat > "$compose_file" <<'EOF'
-####################################
-# 🦎 KOMODO COMPOSE - PERIPHERY 🦎 #
-####################################
-
-## This compose file will deploy:
-##   1. Komodo Periphery
-
 services:
   periphery:
     image: ghcr.io/moghtech/komodo-periphery:${COMPOSE_KOMODO_IMAGE_TAG:-latest}
     labels:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
     restart: unless-stopped
-    ## [https://komo.do/docs/connect-servers#configuration](https://komo.do/docs/connect-servers#configuration)
+    ## https://komo.do/docs/connect-servers#configuration
     environment:
       PERIPHERY_ROOT_DIRECTORY: ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
       ## Pass the same passkey as used by the Komodo Core connecting to this Periphery agent.
@@ -221,7 +214,7 @@ services:
       - /proc:/proc
       ## Specify the Periphery agent root directory.
       ## Must be the same inside and outside the container,
-      ## or docker will get confused. See [https://github.com/moghtech/komodo/discussions/180](https://github.com/moghtech/komodo/discussions/180).
+      ## or docker will get confused. See https://github.com/moghtech/komodo/discussions/180.
       ## Default: /etc/komodo.
       - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
     ## If periphery is being run remote from the core server, ports need to be exposed
