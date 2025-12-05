@@ -1,1 +1,18 @@
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.XXX.entrypoints=http"
+      - "traefik.http.routers.XXX.rule=Host(`XXX.bahmann.dev`)"
+      - "traefik.http.middlewares.whoami-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.XXX.middlewares=traefik-https-redirect"
+      - "traefik.http.routers.XXX-secure.entrypoints=https"
+      - "traefik.http.routers.XXX-secure.rule=Host(`whoami.bahmann.dev`)"
+      - "traefik.http.routers.XXX-secure.tls=true"
+      - "traefik.http.routers.XXX-secure.service=whoami"
+      - "traefik.http.services.XXX.loadbalancer.server.port=80"
+      - "traefik.docker.network=traefik"
 
+networks:
+  traefik:
+    external: true
